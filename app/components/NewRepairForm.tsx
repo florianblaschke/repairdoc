@@ -10,7 +10,7 @@ export default function NewRepairForm() {
         Ticketnummer
         <input
           className="border-solid border-2 join-item"
-          type="text"
+          type="number"
           name="ticket"
         />
       </label>
