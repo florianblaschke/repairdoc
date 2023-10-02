@@ -14,7 +14,14 @@ export default function RepairCard({
   lastName,
   createdAt,
   id,
+  status,
 }: PartialInfo) {
+  const translate: Record<string, string> = {
+    accepted: "Accepted",
+    progress: "In Progress",
+    revalidate: "Contact customer",
+    complete: "Complete",
+  };
   return (
     <div className="card lg:card-side bg-base-100 shadow-xl">
       <figure>
@@ -24,7 +31,7 @@ export default function RepairCard({
         <h2 className="customer">{firstName + " " + lastName}</h2>
         <p>Came in at: {createdAt?.toDateString()} </p>
         <p>Ticket: {ticket} </p>
-        <p>Status: In Repair</p>
+        <p>Status: {translate[status!]}</p>
         <div className="card-actions justify-end">
           <Link href={`/repairs/${id}`} className="btn btn-primary">
             Show Details

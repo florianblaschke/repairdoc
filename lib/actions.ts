@@ -43,3 +43,23 @@ export async function createRepair(data: FormData) {
     redirect("/");
   }
 }
+
+export async function setStatus(data: FormData, id: string) {
+  const schema = z.object({
+    status: z.string(),
+  });
+
+  const status = schema.parse({
+    status: data.get("status"),
+  });
+
+  const newStatus = await prisma.repair.update({
+    where: { id: id },
+    data: {
+      status: status.status,
+    },
+  });
+
+  revalidatePath(`/repairs/${id}`);
+  revalidatePath("/");
+}
