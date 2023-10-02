@@ -2,6 +2,8 @@
 
 import { z } from "zod";
 import prisma from "@/prisma/client";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function createRepair(data: FormData) {
   const schema = z.object({
@@ -35,4 +37,9 @@ export async function createRepair(data: FormData) {
       description: parseRepair.description,
     },
   });
+
+  if (newRepair) {
+    revalidatePath("/");
+    redirect("/");
+  }
 }
