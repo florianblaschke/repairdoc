@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Repair {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
   ticket      Int
   order       Int
   firstName   String
@@ -19,7 +19,17 @@ model Repair {
   email       String
   phone       Int
   description String
-  status      String   @default("accepted")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status      String    @default("accepted")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  comments    Comment[] 
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  createdBy String?
+  createdAt DateTime @default(now())
+  forRepair Repair   @relation(fields: [repairId], references: [id])
+  repairId  String   @db.ObjectId
 }
