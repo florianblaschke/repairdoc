@@ -35,6 +35,7 @@ export async function createRepair(data: FormData) {
       email: parseRepair.email,
       phone: parseRepair.phone,
       description: parseRepair.description,
+      comments: {},
     },
   });
 
@@ -62,4 +63,35 @@ export async function setStatus(data: FormData, id: string) {
 
   revalidatePath(`/repairs/${id}`);
   revalidatePath("/");
+}
+
+export async function addComment(data: FormData, id: string) {
+  const schema = z.object({
+    comment: z.string().nonempty().max(250),
+  });
+
+  const validComment = schema.parse({
+    comment: data.get("comment"),
+  });
+
+  const newComment = await prisma.comment.create({
+    data: { text: validComment.comment, repairId: id },
+  });
+
+  revalidatePath(`/repairs/${id}`);
+}
+
+export async function deleteComment(data: FormData) {
+  const schema = z.object({
+    commentId: z.string().length(24),
+  });
+  const id = schema.parse({
+    commentId: data.get("commentId"),
+  });
+
+  const commentToDelete = await prisma.comment.findUnique({
+    where: { id: id.commentId },
+  });
+  await prisma.comment.delete({ where: { id: commentToDelete!.id } });
+  revalidatePath(`/repairs/${commentToDelete?.repairId}`);
 }

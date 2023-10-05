@@ -1,14 +1,19 @@
 import StatusForm from "@/app/components/StatusForm";
 import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
+import Modal from "@/app/components/Modal";
+import CommentForm from "@/app/components/CommentForm";
+import { deleteComment } from "@/lib/actions";
 
 interface Props {
   params: { id: string };
 }
 
 export default async function RepairDetailPage({ params: { id } }: Props) {
-  const data = await prisma.repair.findUnique({ where: { id } });
-
+  const data = await prisma.repair.findUnique({
+    where: { id: id },
+    include: { comments: true },
+  });
   if (!data) return notFound();
 
   const translate: Record<string, string> = {
@@ -28,7 +33,26 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
           <p>Ticket: {data.ticket} </p>
           <p>Status: {translate[data.status]}</p>
           <StatusForm id={id} />
-          <div className="card-actions justify-end"></div>
+          <div className="card-actions justify-end">
+            <Modal>{<CommentForm id={id} />}</Modal>
+          </div>
+          <ul>
+            {data.comments.map((comm) => (
+              <form
+                action={deleteComment}
+                className="flex flex-row justify-between w-full my-2"
+              >
+                <li key={comm.id}>{comm.text}</li>
+                <button
+                  name="commentId"
+                  value={comm.id}
+                  className="btn self-center"
+                >
+                  X
+                </button>
+              </form>
+            ))}
+          </ul>
         </div>
       </div>
     </main>
