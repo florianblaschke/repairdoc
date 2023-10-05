@@ -19,6 +19,7 @@ model Repair {
   email       String
   phone       Int
   description String
+  status      String   @default("accepted")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
