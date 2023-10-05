@@ -10,9 +10,9 @@ export interface RepairInfo {
   email: string;
   phone: number;
   description: string;
-  status: string;
   createdAt: Date;
   updatedAt: Date;
+  status: string;
 }
 
 export default async function Home() {
@@ -31,7 +31,6 @@ export default async function Home() {
               firstName={entry.firstName}
               lastName={entry.lastName}
               createdAt={entry.createdAt}
-              status={entry.status}
             />
           </li>
         ))}

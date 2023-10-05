@@ -1,13 +1,16 @@
-"use client";
+import prisma from "@/prisma/client";
+import RepairTable from "../components/RepairTable";
 
-import { useState } from "react";
-
-export default function Repairs() {
-  const [modal, setModal] = useState<boolean>(false);
+export default async function Repairs() {
+  const data = await prisma.repair.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-slate-50">
-        Show all repairs (including completed)
+      <main className="flex min-h-screen flex-col items-center justify-start pl-24 bg-slate-50">
+        <RepairTable data={data} />
       </main>
     </>
   );
