@@ -27,10 +27,10 @@ export default async function Home() {
             <RepairCard
               id={entry.id}
               ticket={entry.ticket}
-              order={entry.order}
               firstName={entry.firstName}
               lastName={entry.lastName}
               createdAt={entry.createdAt}
+              status={entry.status}
             />
           </li>
         ))}

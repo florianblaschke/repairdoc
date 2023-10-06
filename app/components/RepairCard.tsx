@@ -9,7 +9,6 @@ type PartialInfo = Partial<RepairInfo>;
 
 export default function RepairCard({
   ticket,
-  order,
   firstName,
   lastName,
   createdAt,

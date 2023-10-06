@@ -35,7 +35,6 @@ export async function createRepair(data: FormData) {
       email: parseRepair.email,
       phone: parseRepair.phone,
       description: parseRepair.description,
-      comments: {},
     },
   });
 
@@ -94,4 +93,21 @@ export async function deleteComment(data: FormData) {
   });
   await prisma.comment.delete({ where: { id: commentToDelete!.id } });
   revalidatePath(`/repairs/${commentToDelete?.repairId}`);
+}
+
+export async function addImageToRepair(imageId: string, repairId: string) {
+  const schema = z.object({
+    imageId: z.string().nonempty(),
+    repairId: z.string().nonempty(),
+  });
+
+  const validId = schema.parse({
+    imageId: imageId,
+    repairId: repairId,
+  });
+
+  const newImage = await prisma.images.create({
+    data: { path: imageId, repairId: repairId },
+  });
+  revalidatePath(`/repairs/${repairId}`);
 }

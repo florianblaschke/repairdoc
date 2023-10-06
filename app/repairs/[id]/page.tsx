@@ -3,7 +3,9 @@ import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
 import Modal from "@/app/components/Modal";
 import CommentForm from "@/app/components/CommentForm";
-import { deleteComment } from "@/lib/actions";
+import { addImageToRepair, deleteComment } from "@/lib/actions";
+import ImgUpload from "@/app/components/ImgUpload";
+import Gallery from "@/app/components/Gallery";
 
 interface Props {
   params: { id: string };
@@ -12,8 +14,9 @@ interface Props {
 export default async function RepairDetailPage({ params: { id } }: Props) {
   const data = await prisma.repair.findUnique({
     where: { id: id },
-    include: { comments: true },
+    include: { comments: true, images: true },
   });
+
   if (!data) return notFound();
 
   const translate: Record<string, string> = {
@@ -36,9 +39,11 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
           <div className="card-actions justify-end">
             <Modal>{<CommentForm id={id} />}</Modal>
           </div>
+          <ImgUpload id={id} addImageToRepair={addImageToRepair} />
           <ul>
             {data.comments.map((comm) => (
               <form
+                key={comm.id}
                 action={deleteComment}
                 className="flex flex-row justify-between w-full my-2"
               >
@@ -53,6 +58,7 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
               </form>
             ))}
           </ul>
+          <Gallery data={data.images} />
         </div>
       </div>
     </main>
