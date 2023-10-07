@@ -78,7 +78,7 @@ export default function NewRepairForm() {
         />
       </label>
       <button
-        className="mt-5 bg-blue-500 py-3 rounded-md text-white group-invalid:pointer-events-none group-invalid:opacity-50"
+        className="btn btn-primary group-invalid:pointer-events-none group-invalid:opacity-50"
         type="submit"
       >
         Reparaturauftrag erstellen

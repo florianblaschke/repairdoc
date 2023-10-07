@@ -4,24 +4,38 @@ import { addComment } from "@/lib/actions";
 
 export default function CommentForm({ id }: { id: string }) {
   return (
-    <form
-      action={(event) => addComment(event, id)}
-      className="bg-white rounded-md p-5 md:p-10 flex flex-col w-11/12 max-w-lg group"
-    >
-      <label htmlFor="mb-5">
-        Repair history
-        <textarea
-          name="comment"
-          className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
-        />
-      </label>
+    <>
       <button
-        className="mt-5 bg-blue-500 py-3 rounded-md text-white group-invalid:pointer-events-none group-invalid:opacity-50"
-        type="submit"
-        onClick={() => document.getElementById("my_modal_2")!.close()}
+        className="btn btn-secondary"
+        onClick={() => document.getElementById("my_modal_2")!.showModal()}
       >
-        Comment
+        Notiz anlegen
       </button>
-    </form>
+      <dialog id="my_modal_2" className="modal">
+        <div className="modal-box flex flex-col">
+          <form
+            action={(event) => addComment(event, id)}
+            className="bg-white rounded-md p-5 md:p-10 flex flex-col w-11/12 max-w-lg group"
+          >
+            <label htmlFor="mb-5">Reparaturverlauf</label>
+            <textarea
+              name="comment"
+              className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
+              required
+            />
+            <button
+              className="btn btn-primary mt-3 text-white group-invalid:pointer-events-none group-invalid:opacity-50"
+              type="submit"
+              onClick={() => document.getElementById("my_modal_2")!.close()}
+            >
+              Speichern
+            </button>
+          </form>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+    </>
   );
 }

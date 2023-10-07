@@ -21,20 +21,20 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-slate-50">
       Show urgent repairs, alarms, dashboard, etc
-      <ul>
+      {/* <ul>
         {data.map((entry: RepairInfo) => (
           <li className="mb-5" key={entry.id}>
             <RepairCard
               id={entry.id}
               ticket={entry.ticket}
-              order={entry.order}
               firstName={entry.firstName}
               lastName={entry.lastName}
               createdAt={entry.createdAt}
+              status={entry.status}
             />
           </li>
         ))}
-      </ul>
+      </ul> */}
     </main>
   );
 }

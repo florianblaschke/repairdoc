@@ -3,15 +3,10 @@ import { RepairInfo } from "../page";
 
 export default function RepairTable({ data }: { data: RepairInfo[] }) {
   return (
-    <div className="w-11/12 min-h-full overflow-x-auto">
+    <div className="w-11/12 min-h-full overflow-x-auto bg-inherit">
       <table className="table">
         <thead>
           <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </th>
             <th>Name</th>
             <th>RMA</th>
             <th>Status</th>
@@ -23,11 +18,6 @@ export default function RepairTable({ data }: { data: RepairInfo[] }) {
         <tbody>
           {data.map((entry, i: number) => (
             <tr key={i}>
-              <th>
-                <label>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </th>
               <td>
                 <div className="flex items-center space-x-3">
                   <div className="font-bold">
@@ -50,10 +40,8 @@ export default function RepairTable({ data }: { data: RepairInfo[] }) {
             </tr>
           ))}
         </tbody>
-        {/* foot */}
         <tfoot>
           <tr>
-            <th></th>
             <th>Name</th>
             <th>RMA</th>
             <th>Status</th>
