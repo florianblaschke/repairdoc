@@ -15,7 +15,7 @@ export default function ImgUpload({
     <CldUploadWidget
       onUpload={(result: CldUploadWidgetResults) => {
         if (!result.event) return;
-        addImageToRepair(result.info!.public_id, id);
+        addImageToRepair(result.info!.url, id);
       }}
       uploadPreset="pwfnq8ch"
     >
@@ -26,7 +26,7 @@ export default function ImgUpload({
         }
         return (
           <button className="btn btn-primary" onClick={handleOnClick}>
-            Upload an Image
+            Bilder hochladen
           </button>
         );
       }}

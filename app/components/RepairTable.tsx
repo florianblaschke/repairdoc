@@ -3,7 +3,7 @@ import { RepairInfo } from "../page";
 
 export default function RepairTable({ data }: { data: RepairInfo[] }) {
   return (
-    <div className="w-11/12 min-h-full overflow-x-auto">
+    <div className="w-11/12 min-h-full overflow-x-auto bg-inherit">
       <table className="table">
         <thead>
           <tr>

@@ -44,13 +44,13 @@ export async function createRepair(data: FormData) {
   }
 }
 
-export async function setStatus(data: FormData, id: string) {
+export async function setStatus(data: string, id: string) {
   const schema = z.object({
     status: z.string(),
   });
 
   const status = schema.parse({
-    status: data.get("status"),
+    status: data,
   });
 
   const newStatus = await prisma.repair.update({

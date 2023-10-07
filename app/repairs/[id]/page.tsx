@@ -1,7 +1,6 @@
 import StatusForm from "@/app/components/StatusForm";
 import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
-import Modal from "@/app/components/Modal";
 import CommentForm from "@/app/components/CommentForm";
 import { addImageToRepair, deleteComment } from "@/lib/actions";
 import ImgUpload from "@/app/components/ImgUpload";
@@ -31,31 +30,42 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
       <div className="card lg:card-side bg-base-100 shadow-xl ml-20">
         <figure></figure>
         <div className="card-body">
-          <h2 className="customer">{data.firstName + " " + data.lastName}</h2>
-          <p>Came in at: {data.createdAt?.toDateString()} </p>
-          <p>Ticket: {data.ticket} </p>
-          <p>Status: {translate[data.status]}</p>
-          <StatusForm id={id} />
-          <div className="card-actions justify-end">
-            <Modal>{<CommentForm id={id} />}</Modal>
+          <div className="flex flex-col gap-2 ">
+            <h2 className="card-title text-lg my-2 divider">
+              Kundeninformation
+            </h2>
+            <p>Name: {data.firstName + " " + data.lastName}</p>
+            <p>Email: {data.email}</p>
+            <p>Tel: +49 {data.phone}</p>
           </div>
-          <ImgUpload id={id} addImageToRepair={addImageToRepair} />
+          <div className="divider"></div>
+          <p>Angenommen: {data.createdAt?.toDateString()} </p>
+          <p>Ticket: {data.ticket} </p>
+          <StatusForm id={id} status={data.status} />
+          <div className="flex justify-between divider">
+            <CommentForm id={id} />
+            <ImgUpload id={id} addImageToRepair={addImageToRepair} />
+          </div>
           <ul>
             {data.comments.map((comm) => (
-              <form
+              <li
                 key={comm.id}
-                action={deleteComment}
-                className="flex flex-row justify-between w-full my-2"
+                className="flex flex-row rounded p-2 relative justify-between items-center w-full my-4 shadow-sm"
               >
-                <li key={comm.id}>{comm.text}</li>
-                <button
-                  name="commentId"
-                  value={comm.id}
-                  className="btn self-center"
-                >
-                  X
-                </button>
-              </form>
+                <p className="absolute top-0 text-xs">
+                  Florian am {comm.createdAt.toDateString()}
+                </p>
+                {comm.text}
+                <form action={deleteComment}>
+                  <button
+                    name="commentId"
+                    value={comm.id}
+                    className="btn btn-circle self-center"
+                  >
+                    X
+                  </button>
+                </form>
+              </li>
             ))}
           </ul>
           <Gallery data={data.images} />
