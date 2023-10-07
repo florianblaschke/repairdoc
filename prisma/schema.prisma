@@ -41,3 +41,10 @@ model Images {
   forRepair Repair @relation(fields: [repairId], references: [id])
   repairId  String @db.ObjectId
 }
+
+model Todo {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  task      String
+  createdBy String?
+  createdAt DateTime @default(now())
+}

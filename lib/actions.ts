@@ -111,3 +111,46 @@ export async function addImageToRepair(imageId: string, repairId: string) {
   });
   revalidatePath(`/repairs/${repairId}`);
 }
+
+export async function createToDo(data: FormData) {
+  const schema = z.object({
+    task: z.string().nonempty(),
+  });
+  try {
+    const validToDo = schema.parse({
+      task: data.get("todo"),
+    });
+
+    const newToDo = await prisma.todo.create({
+      data: {
+        task: validToDo.task,
+      },
+    });
+
+    revalidatePath("/");
+  } catch (error) {
+    if (error instanceof Error) return { message: "Something bad happened" };
+  }
+}
+
+export async function deleteToDo(data: FormData) {
+  const schema = z.object({
+    todo: z.string().nonempty(),
+  });
+
+  try {
+    const validTodo = schema.parse({
+      todo: data.get("todo"),
+    });
+
+    await prisma.todo.delete({
+      where: {
+        id: validTodo.todo,
+      },
+    });
+  } catch (error) {
+    if (error instanceof Error) return { message: "Something bad happened" };
+  }
+
+  revalidatePath("/");
+}
