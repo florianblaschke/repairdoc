@@ -28,12 +28,14 @@ export default async function Home() {
   const data: RepairInfo[] = await prisma.repair.findMany({});
   const todos: Tasks[] = await prisma.todo.findMany({});
 
+  const notCompleted = data.filter((repair) => repair.status !== "complete");
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center ml-32">
-      <div className="box-border grid grid-cols-2 grid-rows-2 min-h-screen min-w-full max-h-full">
-        <div className="row-span-2 box-border border-r-2">
+    <main className="max-h-screen ml-20">
+      <div className="box-border grid grid-cols-2 grid-rows-[300px_auto] min-h-screen min-w-full max-h-full">
+        <div className="row-span-2 box-border border-r-2 overflow-y-auto">
           <ul className="box-border flex flex-col items-center p-2">
-            {data.map((entry: RepairInfo) => (
+            {notCompleted.map((entry: RepairInfo) => (
               <li className="mb-5 box-border" key={entry.id}>
                 <RepairCard
                   id={entry.id}
@@ -48,7 +50,8 @@ export default async function Home() {
           </ul>
         </div>
         <div className="flex flex-col items-center justify-center min-w-fit">
-          <StatBar />
+          <StatBar data={data} todo={todos} />
+          <div className="divider mt-20">To-Do-Liste</div>
         </div>
         <Todo todo={todos} />
       </div>
