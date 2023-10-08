@@ -28,7 +28,7 @@ export default function RepairCard({
       </figure>
       <div className="card-body">
         <h2 className="customer">{firstName + " " + lastName}</h2>
-        <p>Came in at: {createdAt?.toDateString()} </p>
+        <p>Angenommen: {createdAt?.toDateString()} </p>
         <p>Ticket: {ticket} </p>
         <p>Status: {translate[status!]}</p>
         <div className="card-actions justify-end">
