@@ -27,7 +27,6 @@ export interface Tasks {
 export default async function Home() {
   const data: RepairInfo[] = await prisma.repair.findMany({});
   const todos: Tasks[] = await prisma.todo.findMany({});
-
   const notCompleted = data.filter((repair) => repair.status !== "complete");
 
   return (

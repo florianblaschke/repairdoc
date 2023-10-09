@@ -4,6 +4,7 @@ import { z } from "zod";
 import prisma from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { User } from "@prisma/client";
 
 export async function createRepair(data: FormData) {
   const schema = z.object({
@@ -153,4 +154,31 @@ export async function deleteToDo(data: FormData) {
   }
 
   revalidatePath("/");
+}
+
+export async function createOrg(data: FormData, email: string | null) {
+  const schema = z.object({
+    name: z.string().nonempty(),
+    email: z.string().nonempty(),
+  });
+  try {
+    const validOrg = schema.parse({
+      name: data.get("name"),
+      email: email,
+    });
+
+    const newOrg = await prisma.org.create({
+      data: {
+        name: validOrg.name,
+        admin: email!,
+      },
+    });
+
+    revalidatePath("/settings");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return { message: "Not a valid org name!" };
+    if (error instanceof Error)
+      return { message: "Something went terribly wrong..." };
+  }
 }
