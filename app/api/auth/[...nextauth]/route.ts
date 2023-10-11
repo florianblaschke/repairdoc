@@ -12,9 +12,9 @@ const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  pages: {
+  /*   pages: {
     signIn: "/sign-in",
-  },
+  }, */
   /* callbacks: {
     async session({ token, session }) {
       if (token) {
