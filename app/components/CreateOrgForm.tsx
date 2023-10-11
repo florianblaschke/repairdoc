@@ -1,14 +1,8 @@
-"use client";
-
 import { createOrg } from "@/lib/actions";
 
-export default function CreateOrgForm({
-  email,
-}: {
-  email: string | null | undefined;
-}) {
+export default function CreateOrgForm() {
   return (
-    <form action={(event) => createOrg(event, email!)} className="group">
+    <form action={createOrg} className="group">
       <div className="join">
         <label htmlFor="name" className="join-item label label-text border">
           Name deiner Organisation

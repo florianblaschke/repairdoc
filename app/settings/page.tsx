@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import { getAuthSession } from "../api/auth/[...nextauth]/route";
 import CreateOrgForm from "../components/CreateOrgForm";
+import { setOrgActive } from "@/lib/actions";
 
 export default async function Settings() {
   const session = await getAuthSession();
@@ -13,14 +14,21 @@ export default async function Settings() {
       <div className="grid grid-cols-1 grid-rows-[1fr_30px_1fr] h-full">
         <section>
           Gründe eine Organisation!
-          <CreateOrgForm email={session?.user?.email} />
+          <CreateOrgForm />
         </section>
         <div className="divider"></div>
         <div>
           <h2>Meine Organisationen</h2>
           <ul>
             {orgs.map((entry) => (
-              <li key={entry.id}>{entry.name}</li>
+              <li key={entry.id}>
+                {entry.name}
+                <form action={setOrgActive}>
+                  <button name="orgName" value={entry.name}>
+                    Aufgaben dieser Organisation anzeigen
+                  </button>
+                </form>
+              </li>
             ))}
           </ul>
         </div>

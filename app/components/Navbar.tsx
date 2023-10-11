@@ -2,11 +2,16 @@ import Link from "next/link";
 import { getAuthSession } from "../api/auth/[...nextauth]/route";
 import Login from "./Login";
 import Logout from "./Logout";
+import prisma from "@/prisma/client";
 
 export default async function Navbar() {
   const session = await getAuthSession();
+  const activeOrg = await prisma.user.findFirst({
+    where: { email: session?.user?.email },
+  });
   return (
     <div className="navbar flex flex-col items-center justify-evenly h-full fixed top-0 left-0 bg-yellow-300 w-20 min-w-min">
+      <div>{activeOrg?.orgActive}</div>
       <Link href={"/"}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

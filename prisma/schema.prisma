@@ -46,17 +46,19 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  employeeAt   Org?    @relation(fields: [employeeAtId], references: [id])
-  employeeAtId String? @db.ObjectId
+  orgActive    String?
+  employeeAt   Org[]    @relation(fields: [employeeAtId], references: [id])
+  employeeAtId String[] @db.ObjectId
 }
 
 model Org {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @unique
-  admin     String
-  employees User[]
-  repairs   Repair[]
-  tasks     Todo[]
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  admin       String
+  employees   User[]   @relation(fields: [employeesId], references: [id])
+  employeesId String[] @map("employees") @db.ObjectId
+  repairs     Repair[]
+  tasks       Todo[]
 }
 
 model Repair {
