@@ -4,8 +4,17 @@ import { z } from "zod";
 import prisma from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 
 export async function createRepair(data: FormData) {
+  const session = await getAuthSession();
+  const user = await prisma.user.findUnique({
+    where: { email: session?.user?.email! },
+  });
+
+  const activeOrg = await prisma.org.findFirst({
+    where: { name: user?.orgActive! },
+  });
   const schema = z.object({
     ticket: z.coerce.number(),
     order: z.coerce.number(),
@@ -15,31 +24,38 @@ export async function createRepair(data: FormData) {
     phone: z.coerce.number(),
     description: z.string(),
   });
+  try {
+    const parseRepair = schema.parse({
+      ticket: data.get("ticket"),
+      order: data.get("order"),
+      firstName: data.get("firstName"),
+      lastName: data.get("lastName"),
+      email: data.get("email"),
+      phone: data.get("phone"),
+      description: data.get("description"),
+    });
 
-  const parseRepair = schema.parse({
-    ticket: data.get("ticket"),
-    order: data.get("order"),
-    firstName: data.get("firstName"),
-    lastName: data.get("lastName"),
-    email: data.get("email"),
-    phone: data.get("phone"),
-    description: data.get("description"),
-  });
+    const newRepair = await prisma.repair.create({
+      data: {
+        ticket: parseRepair.ticket,
+        order: parseRepair.order,
+        firstName: parseRepair.firstName,
+        lastName: parseRepair.lastName,
+        email: parseRepair.email,
+        phone: parseRepair.phone,
+        description: parseRepair.description,
+        orgId: activeOrg?.id,
+      },
+    });
 
-  const newRepair = await prisma.repair.create({
-    data: {
-      ticket: parseRepair.ticket,
-      order: parseRepair.order,
-      firstName: parseRepair.firstName,
-      lastName: parseRepair.lastName,
-      email: parseRepair.email,
-      phone: parseRepair.phone,
-      description: parseRepair.description,
-    },
-  });
-
-  if (newRepair) {
     revalidatePath("/");
+    redirect("/");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return console.log("Error while validating");
+    if (error instanceof Error) return console.log(error.message);
+    return;
+  } finally {
     redirect("/");
   }
 }
@@ -113,6 +129,7 @@ export async function addImageToRepair(imageId: string, repairId: string) {
 }
 
 export async function createToDo(data: FormData) {
+  const session = await getAuthSession();
   const schema = z.object({
     task: z.string().nonempty(),
   });
@@ -121,9 +138,18 @@ export async function createToDo(data: FormData) {
       task: data.get("todo"),
     });
 
+    const activeUser = await prisma.user.findFirst({
+      where: { email: session?.user?.email },
+    });
+    const activeOrg = await prisma.org.findUnique({
+      where: { name: activeUser?.orgActive! },
+    });
+
     const newToDo = await prisma.todo.create({
       data: {
         task: validToDo.task,
+        createdBy: session?.user?.name,
+        orgId: activeOrg?.id,
       },
     });
 
@@ -153,4 +179,63 @@ export async function deleteToDo(data: FormData) {
   }
 
   revalidatePath("/");
+}
+
+export async function createOrg(data: FormData) {
+  const session = await getAuthSession();
+  const schema = z.object({
+    name: z.string().nonempty(),
+    email: z.string().nonempty(),
+  });
+  try {
+    const validOrg = schema.parse({
+      name: data.get("name"),
+      email: session?.user?.email,
+    });
+
+    const newOrg = await prisma.org.create({
+      data: {
+        name: validOrg.name,
+        admin: validOrg.email!,
+      },
+    });
+
+    revalidatePath("/settings");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return { message: "Not a valid org name!" };
+    if (error instanceof Error)
+      return { message: "Something went terribly wrong..." };
+  }
+}
+
+export async function setOrgActive(data: FormData) {
+  const session = await getAuthSession();
+  const schema = z.object({
+    orgName: z.string().nonempty(),
+    user: z.string().nonempty(),
+  });
+  try {
+    const validOrgAndUser = schema.parse({
+      orgName: data.get("orgName"),
+      user: session?.user?.email,
+    });
+
+    const newOrgActive = await prisma.user.update({
+      where: { email: validOrgAndUser.user },
+      data: {
+        orgActive: validOrgAndUser.orgName,
+      },
+    });
+
+    revalidatePath("/settings");
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      console.log("Zod Error while validating");
+    }
+
+    if (error instanceof Error) {
+      console.log("Error while setting status");
+    }
+  }
 }

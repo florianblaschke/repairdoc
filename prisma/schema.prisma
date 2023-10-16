@@ -10,6 +10,57 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+
+  orgActive    String?
+  employeeAt   Org[]    @relation(fields: [employeeAtId], references: [id])
+  employeeAtId String[] @db.ObjectId
+}
+
+model Org {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  admin       String
+  employees   User[]   @relation(fields: [employeesId], references: [id])
+  employeesId String[] @map("employees") @db.ObjectId
+  repairs     Repair[]
+  tasks       Todo[]
+}
+
 model Repair {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   ticket      Int
@@ -24,6 +75,8 @@ model Repair {
   updatedAt   DateTime  @updatedAt
   comments    Comment[]
   images      Images[]
+  Org         Org?      @relation(fields: [orgId], references: [id])
+  orgId       String?   @db.ObjectId
 }
 
 model Comment {
@@ -47,4 +100,6 @@ model Todo {
   task      String
   createdBy String?
   createdAt DateTime @default(now())
+  Org       Org?     @relation(fields: [orgId], references: [id])
+  orgId     String?  @db.ObjectId
 }

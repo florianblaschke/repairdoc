@@ -11,9 +11,6 @@ export default function Todo({ todo }: { todo: Tasks[] }) {
     <div className="min-w-fit h-full">
       <div className="mt-10 flex justify-center">
         <form ref={form} className="-mt-10 group" action={createToDo}>
-          {/* <label className="join-item label bg-white" htmlFor="todo">
-            Neue Aufgabe
-          </label> */}
           <div className="join">
             <input
               className="input input-bordered join-item group"
@@ -23,7 +20,7 @@ export default function Todo({ todo }: { todo: Tasks[] }) {
               required
             />
             <button
-              onClick={form.current?.reset()}
+              onClick={form.current?.reset()!}
               className="btn btn-secondary join-item group-invalid:pointer-events-none group-invalid:opacity-50"
               type="submit"
             >
@@ -40,7 +37,7 @@ export default function Todo({ todo }: { todo: Tasks[] }) {
               className="flex flex-row rounded p-2 relative justify-between items-center w-full my-4 shadow-sm"
             >
               <p className="absolute top-0 text-xs">
-                Florian am {task.createdAt.toDateString()}
+                {task.createdBy} am {task.createdAt.toDateString()}
               </p>
               {task.task}
               <form action={deleteToDo}>

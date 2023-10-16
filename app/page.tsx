@@ -1,59 +1,36 @@
-import RepairCard from "./components/RepairCard";
-import prisma from "@/prisma/client";
-import StatBar from "./components/StatBar";
-import Todo from "./components/ToDo";
+"use client";
 
-export interface RepairInfo {
-  id: string;
-  ticket: number;
-  order: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: number;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-  status: string;
-}
+import { signIn } from "next-auth/react";
 
-export interface Tasks {
-  id: string;
-  createdBy?: string | null;
-  task: string;
-  createdAt: Date;
-}
+const signInWithGoogle = async () => {
+  try {
+    await signIn("google");
+  } catch (error) {
+    return;
+  }
+};
 
-export default async function Home() {
-  const data: RepairInfo[] = await prisma.repair.findMany({});
-  const todos: Tasks[] = await prisma.todo.findMany({});
-
-  const notCompleted = data.filter((repair) => repair.status !== "complete");
-
+export default function LoginForm() {
   return (
-    <main className="max-h-screen ml-20">
-      <div className="box-border grid grid-cols-2 grid-rows-[300px_auto] min-h-screen min-w-full max-h-full">
-        <div className="row-span-2 box-border border-r-2 overflow-y-auto">
-          <ul className="box-border flex flex-col items-center p-2">
-            {notCompleted.map((entry: RepairInfo) => (
-              <li className="mb-5 box-border" key={entry.id}>
-                <RepairCard
-                  id={entry.id}
-                  ticket={entry.ticket}
-                  firstName={entry.firstName}
-                  lastName={entry.lastName}
-                  createdAt={entry.createdAt}
-                  status={entry.status}
-                />
-              </li>
-            ))}
-          </ul>
+    <main className="flex flex-col items-center justify-center ml-20 h-screen">
+      <div className="card w-96 shadow-xl">
+        <div className="card-body">
+          <h1 className="card-title">
+            Schön, dass du hier bist. Logge dich ein um weiterzuarbeiten!
+          </h1>
+          <p>
+            Du hast noch keinen Account? Dann klicke einfach auf den Knopf und
+            erstelle dir ein Konto mit Google!
+          </p>
+          <div className="card-actions">
+            <button
+              onClick={() => signInWithGoogle()}
+              className="btn btn-primary mt-4"
+            >
+              Mit Google anmelden
+            </button>
+          </div>
         </div>
-        <div className="flex flex-col items-center justify-center min-w-fit">
-          <StatBar data={data} todo={todos} />
-          <div className="divider mt-20">To-Do-Liste</div>
-        </div>
-        <Todo todo={todos} />
       </div>
     </main>
   );
