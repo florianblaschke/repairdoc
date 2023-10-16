@@ -1,4 +1,4 @@
-import { RepairInfo, Tasks } from "../page";
+import { RepairInfo, Tasks } from "../dashboard/page";
 
 export default function StatBar({
   data,
