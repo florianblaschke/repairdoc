@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { getAuthSession } from "../api/auth/[...nextauth]/route";
-import Login from "./Login";
-import Logout from "./Logout";
 import prisma from "@/prisma/client";
 
 export default async function Navbar() {
@@ -12,7 +10,7 @@ export default async function Navbar() {
   return (
     <div className="navbar flex flex-col items-center justify-evenly h-full fixed top-0 left-0 bg-yellow-300 w-20 min-w-min">
       <div>{activeOrg?.orgActive}</div>
-      <Link href={"/"}>
+      <Link href={"/dashboard"}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -96,8 +94,6 @@ export default async function Navbar() {
           <circle cx="12" cy="12" r="3" />
         </svg>
       </Link>
-      {!session && <Login />}
-      {session && <Logout />}
     </div>
   );
 }

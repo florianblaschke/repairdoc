@@ -6,19 +6,21 @@ import prisma from "@/prisma/client";
 
 const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  /*   pages: {
+  pages: {
     signIn: "/sign-in",
-  }, */
-  /* callbacks: {
+  },
+  callbacks: {
     async session({ token, session }) {
       if (token) {
-        console.log(token, session);
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
@@ -43,7 +45,10 @@ const authOptions: NextAuthOptions = {
         picture: dbUser.image,
       };
     },
-  }, */
+    redirect() {
+      return "/dashboard";
+    },
+  },
 };
 
 const handler = NextAuth(authOptions);
