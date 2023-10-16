@@ -16,24 +16,27 @@ export default function RepairCard({
   status,
 }: PartialInfo) {
   const translate: Record<string, string> = {
-    accepted: "Accepted",
-    progress: "In Progress",
-    revalidate: "Contact customer",
-    complete: "Complete",
+    accepted: "Angenommen",
+    progress: "In Bearbeitung",
+    revalidate: "Kunden kontaktieren",
+    complete: "Abgeschlossen",
   };
   return (
-    <div className="card lg:card-side bg-base-100 shadow-xl">
+    <div className="card lg:card-side bg-base-100 shadow-xl min-w-full">
       <figure>
         <Image src={rocket} height={100} width={100} alt="Machine" />
       </figure>
       <div className="card-body">
-        <h2 className="customer">{firstName + " " + lastName}</h2>
-        <p>Angenommen: {createdAt?.toLocaleDateString("de-DE")} </p>
-        <p>Ticket: {ticket} </p>
-        <p>Status: {translate[status!]}</p>
-        <div className="card-actions justify-end">
+        <h2 className="card-title">{firstName + " " + lastName}</h2>
+        <span className="font-bold">Angenommen:</span>
+        <p className="text-sm">{createdAt?.toLocaleDateString("de-DE")} </p>
+        <span className="font-bold">Ticket:</span>
+        <p className="text-sm">{ticket} </p>
+        <span className="font-bold">Status:</span>
+        <p className="text-sm">{translate[status!]}</p>
+        <div className="card-actions justify-end mt-8">
           <Link href={`/repairs/${id}`} className="btn btn-primary">
-            Show Details
+            Details
           </Link>
         </div>
       </div>

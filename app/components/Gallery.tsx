@@ -1,7 +1,6 @@
 "use client";
 
 import { CldImage } from "next-cloudinary";
-import Link from "next/link";
 
 type Image = Record<string, string>;
 
@@ -9,8 +8,9 @@ export default function Gallery({ data }: { data: Image[] }) {
   return (
     <div className="carousel rounded-box">
       {data &&
-        data.map((entry) => (
+        data.map((entry, i) => (
           <div
+            key={i}
             onClick={() => document.getElementById("repairModal")!.showModal()}
           >
             <CldImage

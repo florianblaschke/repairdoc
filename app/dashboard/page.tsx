@@ -43,11 +43,11 @@ export default async function Home() {
 
   return (
     <main className="max-h-screen ml-20">
-      <div className="box-border grid grid-cols-2 grid-rows-[300px_auto] min-h-screen min-w-full max-h-full">
-        <div className="row-span-2 box-border border-r-2 overflow-y-auto">
-          <ul className="box-border flex flex-col items-center p-2">
+      <div className="ml-8 grid grid-cols-2 grid-rows-[300px_auto] min-h-screen min-w-full max-h-full">
+        <div className="row-span-2 box-border border-r-2 overflow-y-auto w-full">
+          <ul className="flex flex-col items-center p-2">
             {notCompleted!.map((entry) => (
-              <li className="mb-5 box-border" key={entry.id}>
+              <li className="mb-5 w-5/6" key={entry.id}>
                 <RepairCard
                   id={entry.id}
                   ticket={entry.ticket}

@@ -2,7 +2,7 @@
 
 import { createToDo } from "@/lib/actions";
 import { useRef } from "react";
-import { Tasks } from "../page";
+import { Tasks } from "../dashboard/page";
 import { deleteToDo } from "@/lib/actions";
 
 export default function Todo({ todo }: { todo: Tasks[] }) {
@@ -37,7 +37,7 @@ export default function Todo({ todo }: { todo: Tasks[] }) {
               className="flex flex-row rounded p-2 relative justify-between items-center w-full my-4 shadow-sm"
             >
               <p className="absolute top-0 text-xs">
-                {task.createdBy} am {task.createdAt.toDateString()}
+                {task.createdBy} am {task.createdAt.toLocaleDateString("de-DE")}
               </p>
               {task.task}
               <form action={deleteToDo}>

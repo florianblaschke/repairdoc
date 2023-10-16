@@ -7,6 +7,7 @@ export default function CommentForm({ id }: { id: string }) {
     <>
       <button
         className="btn btn-secondary"
+        /* @ts-ignore */
         onClick={() => document.getElementById("my_modal_2")!.showModal()}
       >
         Notiz anlegen
@@ -26,6 +27,7 @@ export default function CommentForm({ id }: { id: string }) {
             <button
               className="btn btn-primary mt-3 text-white group-invalid:pointer-events-none group-invalid:opacity-50"
               type="submit"
+              /* @ts-ignore */
               onClick={() => document.getElementById("my_modal_2")!.close()}
             >
               Speichern

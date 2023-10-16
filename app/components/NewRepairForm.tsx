@@ -4,7 +4,7 @@ export default function NewRepairForm() {
   return (
     <form
       action={createRepair}
-      className="bg-white rounded-md p-5 md:p-10 flex flex-col flex-wrap w-full group"
+      className="bg-white rounded-md p-5 md:p-10 flex flex-col flex-wrap w-full group lg:w-1/2"
       noValidate
     >
       <label className="mb-5" htmlFor="ticket">

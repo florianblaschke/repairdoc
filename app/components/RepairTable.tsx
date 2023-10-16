@@ -2,6 +2,12 @@ import Link from "next/link";
 import { RepairInfo } from "../dashboard/page";
 
 export default function RepairTable({ data }: { data: RepairInfo[] }) {
+  const translate: Record<string, string> = {
+    accepted: "Angenommen",
+    progress: "In Bearbeitung",
+    revalidate: "Kunden kontaktieren",
+    complete: "Abgeschlossen",
+  };
   return (
     <div className="w-11/12 min-h-full overflow-x-auto bg-inherit">
       <table className="table">
@@ -26,9 +32,9 @@ export default function RepairTable({ data }: { data: RepairInfo[] }) {
                 </div>
               </td>
               <td>{entry.ticket}</td>
-              <td>{entry.status}</td>
-              <td>{entry.createdAt.toDateString()}</td>
-              <td>{entry.createdAt.toDateString()}</td>
+              <td>{translate[entry.status]}</td>
+              <td>{entry.createdAt.toLocaleDateString("de-DE")}</td>
+              <td>{entry.createdAt.toLocaleDateString("de-DE")}</td>
               <th>
                 <Link
                   href={`repairs/${entry.id}`}
