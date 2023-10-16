@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import rocket from "@/public/rocket.png";
-import { RepairInfo } from "../page";
+import { RepairInfo } from "../dashboard/page";
 import Link from "next/link";
 
 type PartialInfo = Partial<RepairInfo>;
@@ -28,7 +28,7 @@ export default function RepairCard({
       </figure>
       <div className="card-body">
         <h2 className="customer">{firstName + " " + lastName}</h2>
-        <p>Angenommen: {createdAt?.toDateString()} </p>
+        <p>Angenommen: {createdAt?.toLocaleDateString("de-DE")} </p>
         <p>Ticket: {ticket} </p>
         <p>Status: {translate[status!]}</p>
         <div className="card-actions justify-end">

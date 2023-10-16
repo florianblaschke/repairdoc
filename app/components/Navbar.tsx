@@ -8,7 +8,7 @@ export default async function Navbar() {
     where: { email: session?.user?.email },
   });
   return (
-    <div className="navbar flex flex-col items-center justify-evenly h-full fixed top-0 left-0 bg-yellow-300 w-20 min-w-min">
+    <div className="navbar flex flex-col items-center justify-evenly h-full fixed top-0 left-0 bg-yellow-300 w-20 min-w-min shadow-xl">
       <div>{activeOrg?.orgActive}</div>
       <Link href={"/dashboard"}>
         <svg

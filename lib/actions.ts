@@ -8,6 +8,11 @@ import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 
 export async function createRepair(data: FormData) {
   const session = await getAuthSession();
+
+  if (!session) {
+    redirect("/");
+  }
+
   const user = await prisma.user.findUnique({
     where: { email: session?.user?.email! },
   });
@@ -15,13 +20,20 @@ export async function createRepair(data: FormData) {
   const activeOrg = await prisma.org.findFirst({
     where: { name: user?.orgActive! },
   });
+
   const schema = z.object({
     ticket: z.coerce.number(),
     order: z.coerce.number(),
     firstName: z.string().nonempty(),
     lastName: z.string().nonempty(),
     email: z.string().email().nonempty(),
+    pre: z.string(),
     phone: z.coerce.number(),
+    street: z.string().nonempty(),
+    number: z.string().nonempty(),
+    zip: z.coerce.number(),
+    city: z.string().nonempty(),
+    country: z.string().nonempty(),
     description: z.string(),
   });
   try {
@@ -31,7 +43,13 @@ export async function createRepair(data: FormData) {
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
       email: data.get("email"),
-      phone: data.get("phone"),
+      pre: data.get("pre"),
+      phone: data.get("phone")?.toString().replaceAll(" ", ""),
+      street: data.get("street"),
+      number: data.get("housenumber"),
+      zip: data.get("zip"),
+      city: data.get("city"),
+      country: data.get("country"),
       description: data.get("description"),
     });
 
@@ -43,20 +61,26 @@ export async function createRepair(data: FormData) {
         lastName: parseRepair.lastName,
         email: parseRepair.email,
         phone: parseRepair.phone,
+        street: parseRepair.street,
+        pre: parseRepair.pre,
+        number: parseRepair.number,
+        zip: parseRepair.zip,
+        city: parseRepair.city,
+        country: parseRepair.country,
         description: parseRepair.description,
         orgId: activeOrg?.id,
       },
     });
 
     revalidatePath("/");
-    redirect("/");
+    redirect("/dashboard");
   } catch (error) {
     if (error instanceof z.ZodError)
-      return console.log("Error while validating");
+      return console.log("Error while validating", error.message);
     if (error instanceof Error) return console.log(error.message);
     return;
   } finally {
-    redirect("/");
+    redirect("/dashboard");
   }
 }
 
@@ -81,6 +105,8 @@ export async function setStatus(data: string, id: string) {
 }
 
 export async function addComment(data: FormData, id: string) {
+  const session = await getAuthSession();
+  if (!session) return redirect("/");
   const schema = z.object({
     comment: z.string().nonempty().max(250),
   });
@@ -90,7 +116,11 @@ export async function addComment(data: FormData, id: string) {
   });
 
   const newComment = await prisma.comment.create({
-    data: { text: validComment.comment, repairId: id },
+    data: {
+      text: validComment.comment,
+      repairId: id,
+      createdBy: session.user.name,
+    },
   });
 
   revalidatePath(`/repairs/${id}`);

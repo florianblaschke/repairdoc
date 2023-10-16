@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { RepairInfo } from "../page";
+import { RepairInfo } from "../dashboard/page";
 
 export default function RepairTable({ data }: { data: RepairInfo[] }) {
   return (

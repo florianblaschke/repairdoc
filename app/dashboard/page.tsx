@@ -3,6 +3,7 @@ import prisma from "@/prisma/client";
 import StatBar from "../components/StatBar";
 import Todo from "../components/ToDo";
 import { getAuthSession } from "../api/auth/[...nextauth]/route";
+import { notFound } from "next/navigation";
 
 export interface RepairInfo {
   id: string;
@@ -38,12 +39,14 @@ export default async function Home() {
     (repair) => repair.status !== "complete"
   );
 
+  if (!user || !orgData || !notCompleted) return notFound();
+
   return (
     <main className="max-h-screen ml-20">
       <div className="box-border grid grid-cols-2 grid-rows-[300px_auto] min-h-screen min-w-full max-h-full">
         <div className="row-span-2 box-border border-r-2 overflow-y-auto">
           <ul className="box-border flex flex-col items-center p-2">
-            {notCompleted!.map((entry: RepairInfo) => (
+            {notCompleted!.map((entry) => (
               <li className="mb-5 box-border" key={entry.id}>
                 <RepairCard
                   id={entry.id}

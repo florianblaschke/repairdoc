@@ -11,6 +11,7 @@ export default function StatusForm({
 }) {
   return (
     <form>
+      <span className="font-bold mr-2">Status:</span>
       <select
         className="select select-bordered"
         onChange={(event) => setStatus(event.target.value, id)}
@@ -18,10 +19,10 @@ export default function StatusForm({
         id="status"
         defaultValue={status}
       >
-        <option value="accepted">Accepted</option>
-        <option value="progress">In Progress</option>
-        <option value="revalidate">Await response from customer</option>
-        <option value="complete">Complete</option>
+        <option value="accepted">Eingegangen</option>
+        <option value="progress">In Bearbeitung</option>
+        <option value="revalidate">Kunden kontaktieren</option>
+        <option value="complete">Abgeschlossen</option>
       </select>
     </form>
   );
