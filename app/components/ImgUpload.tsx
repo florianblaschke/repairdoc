@@ -15,6 +15,7 @@ export default function ImgUpload({
     <CldUploadWidget
       onUpload={(result: CldUploadWidgetResults) => {
         if (!result.event) return;
+        /* @ts-ignore */
         addImageToRepair(result.info!.url, id);
       }}
       uploadPreset="pwfnq8ch"
