@@ -11,6 +11,7 @@ export default function Gallery({ data }: { data: Image[] }) {
         data.map((entry, i) => (
           <div
             key={i}
+            /* @ts-ignore */
             onClick={() => document.getElementById("repairModal")!.showModal()}
           >
             <CldImage
