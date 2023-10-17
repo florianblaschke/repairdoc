@@ -167,6 +167,33 @@ export async function deleteComment(data: FormData) {
   revalidatePath(`/repairs/${commentToDelete?.repairId}`);
 }
 
+export async function updateComment(data: FormData, id: string) {
+  const schema = z.object({
+    commentId: z.string().length(24),
+    comment: z.string().nonempty(),
+  });
+
+  try {
+    const validUpdate = schema.parse({
+      comment: data.get("comment"),
+      commentId: id,
+    });
+
+    await prisma.comment.update({
+      where: { id },
+      data: {
+        text: validUpdate.comment,
+      },
+    });
+    revalidatePath(`/repairs/${id}`);
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return console.log("Error while validating", error.message);
+    if (error instanceof Error) return console.log(error.message);
+    return;
+  }
+}
+
 export async function addImageToRepair(imageId: string, repairId: string) {
   const schema = z.object({
     imageId: z.string().nonempty(),
