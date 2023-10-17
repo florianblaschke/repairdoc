@@ -24,6 +24,9 @@ export async function createRepair(data: FormData) {
   const schema = z.object({
     ticket: z.coerce.number(),
     order: z.coerce.number(),
+    type: z.string(),
+    model: z.string(),
+    serial: z.string(),
     firstName: z.string().nonempty(),
     lastName: z.string().nonempty(),
     email: z.string().email().nonempty(),
@@ -40,6 +43,9 @@ export async function createRepair(data: FormData) {
     const parseRepair = schema.parse({
       ticket: data.get("ticket"),
       order: data.get("order"),
+      type: data.get("type"),
+      model: data.get("model"),
+      serial: data.get("serial"),
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
       email: data.get("email"),
@@ -57,6 +63,9 @@ export async function createRepair(data: FormData) {
       data: {
         ticket: parseRepair.ticket,
         order: parseRepair.order,
+        type: parseRepair.type,
+        model: parseRepair.model,
+        serial: parseRepair.serial,
         firstName: parseRepair.firstName,
         lastName: parseRepair.lastName,
         email: parseRepair.email,

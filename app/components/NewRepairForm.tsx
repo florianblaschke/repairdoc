@@ -7,24 +7,57 @@ export default function NewRepairForm() {
       className="bg-white rounded-md p-5 md:p-10 flex flex-col flex-wrap w-full group lg:w-1/2"
       noValidate
     >
-      <label className="mb-5" htmlFor="ticket">
-        <span>Ticketnummer</span>
-        <input
-          className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
-          type="number"
-          name="ticket"
-          placeholder="Optional"
-        />
-      </label>
-      <label className="mb-5">
-        Bestellnummer
-        <input
-          className="w-full border rounded border-gray-300 bg-inherit p-3 shadow shadow-gray-100 appearance-none outline-none text-neutral-800 "
-          type="number"
-          name="order"
-          placeholder="Optional"
-        />
-      </label>
+      <div className="flex flex-row flex-wrap justify-between items-center gap-1">
+        <label className="mb-5" htmlFor="ticket">
+          <span>Ticketnummer</span>
+          <input
+            className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
+            type="number"
+            name="ticket"
+            placeholder="Optional"
+          />
+        </label>
+        <label className="mb-5" htmlFor="ticket">
+          <span>Bestellnummer</span>
+          <input
+            className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
+            type="number"
+            name="order"
+            placeholder="Optional"
+          />
+        </label>
+        <label className="mb-5" htmlFor="ticket">
+          <span>Seriennummer</span>
+          <input
+            className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
+            type="number"
+            name="serial"
+            placeholder="Optional"
+          />
+        </label>
+        <label className="mb-5">
+          Bitte wähle zwischen
+          <select
+            className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
+            name="type"
+            id="type"
+            required
+          >
+            <option value="machine">Maschine</option>
+            <option value="grinder">Mühle</option>
+          </select>
+        </label>
+        <label className="mb-5 w-full" htmlFor="ticket">
+          <span>Modell</span>
+          <input
+            className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
+            type="text"
+            name="model"
+            placeholder="Slayer V3"
+            required
+          />
+        </label>
+      </div>
       <label className="mb-5">
         Vorname
         <input

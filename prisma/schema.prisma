@@ -62,9 +62,12 @@ model Org {
 }
 
 model Repair {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   ticket      Int
   order       Int
+  serial      String?
+  type        String
+  model       String
   firstName   String
   lastName    String
   email       String

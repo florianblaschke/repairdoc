@@ -7,6 +7,7 @@ import ImgUpload from "@/app/components/ImgUpload";
 import Gallery from "@/app/components/Gallery";
 import DeleteRepair from "@/app/components/DeleteRepair";
 import UpdateComment from "@/app/components/UpdateComment";
+import { translateType } from "@/lib/helpers";
 
 interface Props {
   params: { id: string };
@@ -44,16 +45,22 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
             <span className="w-auto font-bold">Stadt:</span>
             <p className="text-sm">{data.city}</p>
             <span className="w-auto font-bold">Land:</span>
-            <p className="text-sm">Land: {data.country}</p>
+            <p className="text-sm">{data.country}</p>
+            <span className="w-auto font-bold">Was:</span>
+            <p className="text-sm">{translateType[data.type]}</p>
+            <span className="w-auto font-bold">Modell:</span>
+            <p className="text-sm">{data.model}</p>
           </div>
           <div className="divider"></div>
-          <div className="flex gap-1 items-center">
+          <div className="flex gap-1 items-center my-3">
             <span className="font-bold">Angenommen:</span>
             <p className="font-sm text-sm">
               {data.createdAt?.toLocaleDateString("de-DE")}{" "}
             </p>
             <span className="font-bold">Ticket:</span>
             <p className="text-sm">{data.ticket}</p>
+            <span className="font-bold">Seriennummer:</span>
+            <p className="text-sm">{data.serial}</p>
           </div>
           <StatusForm id={id} status={data.status} />
           <div className="flex justify-between divider">
