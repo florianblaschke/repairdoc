@@ -2,10 +2,10 @@ import { createOrg } from "@/lib/actions";
 
 export default function CreateOrgForm() {
   return (
-    <form action={createOrg} className="group">
+    <form action={createOrg} className="group p-10">
       <div className="join">
         <label htmlFor="name" className="join-item label label-text border">
-          Name deiner Organisation
+          Name
         </label>
         <input
           type="text"
@@ -13,6 +13,7 @@ export default function CreateOrgForm() {
           id="name"
           className="input join-item input-bordered"
           required
+          placeholder="dreamteam"
         />
         <button
           className="group btn btn-secondary join-item group-invalid:pointer-events-none group-invalid:opacity-50"

@@ -101,7 +101,7 @@ export async function setStatus(data: string, id: string) {
   });
 
   revalidatePath(`/repairs/${id}`);
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }
 
 export async function addComment(data: FormData, id: string) {
@@ -183,7 +183,7 @@ export async function createToDo(data: FormData) {
       },
     });
 
-    revalidatePath("/");
+    revalidatePath("/dashboard");
   } catch (error) {
     if (error instanceof Error) return { message: "Something bad happened" };
   }
@@ -208,7 +208,7 @@ export async function deleteToDo(data: FormData) {
     if (error instanceof Error) return { message: "Something bad happened" };
   }
 
-  revalidatePath("/");
+  revalidatePath("/dashboard");
 }
 
 export async function createOrg(data: FormData) {

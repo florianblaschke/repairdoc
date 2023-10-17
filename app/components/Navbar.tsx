@@ -1,15 +1,50 @@
+import prisma from "@/prisma/client";
 import Link from "next/link";
 import { getAuthSession } from "../api/auth/[...nextauth]/route";
-import prisma from "@/prisma/client";
+import Logout from "./LogOut";
+import { setOrgActive } from "@/lib/actions";
 
 export default async function Navbar() {
   const session = await getAuthSession();
-  const activeOrg = await prisma.user.findFirst({
+
+  const user = await prisma.user.findFirst({
     where: { email: session?.user?.email },
   });
+
+  const admin = await prisma.org.findMany({ where: { admin: user?.email! } });
+
   return (
-    <div className="navbar flex flex-col items-center justify-evenly h-full fixed top-0 left-0 bg-yellow-300 w-20 min-w-min shadow-xl">
-      <div>{activeOrg?.orgActive}</div>
+    <div className="navbar z-40 flex flex-col items-center justify-evenly h-full fixed top-0 left-0 bg-yellow-300 w-20 min-w-min shadow-xl">
+      {user?.orgActive && (
+        <div className="dropdown dropdown-right">
+          <label tabIndex={0} className="btn btn-circle">
+            {user.orgActive.charAt(0).toUpperCase() +
+              user.orgActive.charAt(user.orgActive.length - 1).toUpperCase()}
+          </label>
+          <ul
+            tabIndex={0}
+            className="dropdown-content z-[40] menu p-2 shadow bg-base-100 rounded-box w-64"
+          >
+            {admin.map((entry) => (
+              <li key={entry.id}>
+                <form
+                  action={setOrgActive}
+                  className="flex justify-between items-center"
+                >
+                  <span className="text-sm font-medium">{entry.name}</span>
+                  <button
+                    className="btn btn-secondary"
+                    name="orgName"
+                    value={entry.name}
+                  >
+                    {user.orgActive === entry.name ? "Aktiv" : "Wechseln"}
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       <Link href={"/dashboard"}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +95,7 @@ export default async function Navbar() {
           <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
         </svg>
       </Link>
-      <Link href={"/"}>
+      <Link href={"/dashboard"}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -94,6 +129,7 @@ export default async function Navbar() {
           <circle cx="12" cy="12" r="3" />
         </svg>
       </Link>
+      {session && <Logout />}
     </div>
   );
 }
