@@ -5,6 +5,7 @@ import CommentForm from "@/app/components/CommentForm";
 import { addImageToRepair, deleteComment } from "@/lib/actions";
 import ImgUpload from "@/app/components/ImgUpload";
 import Gallery from "@/app/components/Gallery";
+import DeleteRepair from "@/app/components/DeleteRepair";
 
 interface Props {
   params: { id: string };
@@ -57,6 +58,7 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
           <div className="flex justify-between divider">
             <CommentForm id={id} />
             <ImgUpload id={id} addImageToRepair={addImageToRepair} />
+            <DeleteRepair id={id} />
           </div>
           <ul>
             {data.comments.map((comm) => (

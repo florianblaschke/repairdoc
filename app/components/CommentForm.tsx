@@ -1,8 +1,10 @@
 "use client";
 
 import { addComment } from "@/lib/actions";
+import { useRef } from "react";
 
 export default function CommentForm({ id }: { id: string }) {
+  const formRef = useRef<HTMLFormElement>(null);
   return (
     <>
       <button
@@ -15,6 +17,8 @@ export default function CommentForm({ id }: { id: string }) {
       <dialog id="my_modal_2" className="modal">
         <div className="modal-box flex flex-col">
           <form
+            onSubmit={formRef.current?.reset()!}
+            ref={formRef}
             action={(event) => addComment(event, id)}
             className="bg-white rounded-md p-5 md:p-10 flex flex-col w-11/12 max-w-lg group"
           >
@@ -27,8 +31,10 @@ export default function CommentForm({ id }: { id: string }) {
             <button
               className="btn btn-primary mt-3 text-white group-invalid:pointer-events-none group-invalid:opacity-50"
               type="submit"
-              /* @ts-ignore */
-              onClick={() => document.getElementById("my_modal_2")!.close()}
+              onClick={() => {
+                /* @ts-ignore */
+                document.getElementById("my_modal_2")!.close();
+              }}
             >
               Speichern
             </button>

@@ -1,10 +1,10 @@
 "use server";
 
-import { z } from "zod";
+import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
+import { z } from "zod";
 
 export async function createRepair(data: FormData) {
   const session = await getAuthSession();
@@ -81,6 +81,32 @@ export async function createRepair(data: FormData) {
     return;
   } finally {
     redirect("/dashboard");
+  }
+}
+
+export async function deleteRepair(data: FormData) {
+  const session = await getAuthSession();
+  if (!session) redirect("/");
+
+  const schema = z.object({
+    id: z.string().nonempty(),
+  });
+  try {
+    const validId = schema.parse({
+      id: data.get("id"),
+    });
+    await prisma.repair.delete({
+      where: {
+        id: validId.id,
+      },
+    });
+    revalidatePath("/dashboard");
+    revalidatePath("/repairs");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return console.log("Error while validating", error.message);
+    if (error instanceof Error) return console.log(error.message);
+    return;
   }
 }
 
