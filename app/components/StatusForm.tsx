@@ -21,6 +21,8 @@ export default function StatusForm({
       >
         <option value="accepted">Eingegangen</option>
         <option value="progress">In Bearbeitung</option>
+        <option value="wait">Warten auf Ersatzteile</option>
+        <option value="offer">Kostenvoranschlag senden</option>
         <option value="revalidate">Kunden kontaktieren</option>
         <option value="complete">Abgeschlossen</option>
       </select>

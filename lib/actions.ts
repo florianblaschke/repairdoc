@@ -1,10 +1,10 @@
 "use server";
 
-import { z } from "zod";
+import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
+import { z } from "zod";
 
 export async function createRepair(data: FormData) {
   const session = await getAuthSession();
@@ -84,6 +84,32 @@ export async function createRepair(data: FormData) {
   }
 }
 
+export async function deleteRepair(data: FormData) {
+  const session = await getAuthSession();
+  if (!session) redirect("/");
+
+  const schema = z.object({
+    id: z.string().nonempty(),
+  });
+  try {
+    const validId = schema.parse({
+      id: data.get("id"),
+    });
+    await prisma.repair.delete({
+      where: {
+        id: validId.id,
+      },
+    });
+    revalidatePath("/dashboard");
+    revalidatePath("/repairs");
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return console.log("Error while validating", error.message);
+    if (error instanceof Error) return console.log(error.message);
+    return;
+  }
+}
+
 export async function setStatus(data: string, id: string) {
   const schema = z.object({
     status: z.string(),
@@ -139,6 +165,33 @@ export async function deleteComment(data: FormData) {
   });
   await prisma.comment.delete({ where: { id: commentToDelete!.id } });
   revalidatePath(`/repairs/${commentToDelete?.repairId}`);
+}
+
+export async function updateComment(data: FormData, id: string) {
+  const schema = z.object({
+    commentId: z.string().length(24),
+    comment: z.string().nonempty(),
+  });
+
+  try {
+    const validUpdate = schema.parse({
+      comment: data.get("comment"),
+      commentId: id,
+    });
+
+    await prisma.comment.update({
+      where: { id },
+      data: {
+        text: validUpdate.comment,
+      },
+    });
+    revalidatePath(`/repairs/${id}`);
+  } catch (error) {
+    if (error instanceof z.ZodError)
+      return console.log("Error while validating", error.message);
+    if (error instanceof Error) return console.log(error.message);
+    return;
+  }
 }
 
 export async function addImageToRepair(imageId: string, repairId: string) {

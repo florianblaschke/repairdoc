@@ -2,9 +2,11 @@ import StatusForm from "@/app/components/StatusForm";
 import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
 import CommentForm from "@/app/components/CommentForm";
-import { addImageToRepair, deleteComment } from "@/lib/actions";
+import { addImageToRepair, deleteComment, updateComment } from "@/lib/actions";
 import ImgUpload from "@/app/components/ImgUpload";
 import Gallery from "@/app/components/Gallery";
+import DeleteRepair from "@/app/components/DeleteRepair";
+import UpdateComment from "@/app/components/UpdateComment";
 
 interface Props {
   params: { id: string };
@@ -57,6 +59,7 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
           <div className="flex justify-between divider">
             <CommentForm id={id} />
             <ImgUpload id={id} addImageToRepair={addImageToRepair} />
+            <DeleteRepair id={id} />
           </div>
           <ul>
             {data.comments.map((comm) => (
@@ -69,15 +72,18 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
                   {comm.createdAt.toLocaleDateString("de-DE")}
                 </p>
                 {comm.text}
-                <form action={deleteComment}>
-                  <button
-                    name="commentId"
-                    value={comm.id}
-                    className="btn btn-circle self-center"
-                  >
-                    X
-                  </button>
-                </form>
+                <div className="flex flex-row-reverse gap-2">
+                  <form action={deleteComment}>
+                    <button
+                      name="commentId"
+                      value={comm.id}
+                      className="btn btn-circle self-center"
+                    >
+                      X
+                    </button>
+                  </form>
+                  <UpdateComment id={comm.id} text={comm.text} />
+                </div>
               </li>
             ))}
           </ul>
@@ -86,4 +92,23 @@ export default async function RepairDetailPage({ params: { id } }: Props) {
       </div>
     </main>
   );
+}
+
+{
+  /* <svg
+xmlns="http://www.w3.org/2000/svg"
+width="24"
+height="24"
+viewBox="0 0 24 24"
+fill="none"
+stroke="currentColor"
+strokeWidth="2"
+strokeLinecap="round"
+strokeLinejoin="round"
+className="lucide lucide-pencil-line"
+>
+<path d="M12 20h9" />
+<path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+<path d="m15 5 3 3" />
+</svg> */
 }

@@ -1,13 +1,8 @@
 import Link from "next/link";
 import { RepairInfo } from "../dashboard/page";
+import { translate } from "@/lib/helpers";
 
 export default function RepairTable({ data }: { data: RepairInfo[] }) {
-  const translate: Record<string, string> = {
-    accepted: "Angenommen",
-    progress: "In Bearbeitung",
-    revalidate: "Kunden kontaktieren",
-    complete: "Abgeschlossen",
-  };
   return (
     <div className="w-11/12 min-h-full overflow-x-auto bg-inherit">
       <table className="table">

@@ -4,6 +4,7 @@ import Image from "next/image";
 import rocket from "@/public/rocket.png";
 import { RepairInfo } from "../dashboard/page";
 import Link from "next/link";
+import { translate } from "@/lib/helpers";
 
 type PartialInfo = Partial<RepairInfo>;
 
@@ -15,12 +16,6 @@ export default function RepairCard({
   id,
   status,
 }: PartialInfo) {
-  const translate: Record<string, string> = {
-    accepted: "Angenommen",
-    progress: "In Bearbeitung",
-    revalidate: "Kunden kontaktieren",
-    complete: "Abgeschlossen",
-  };
   return (
     <div className="card lg:card-side bg-base-100 shadow-xl min-w-full">
       <figure>
