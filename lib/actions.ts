@@ -331,3 +331,47 @@ export async function setOrgActive(data: FormData) {
     }
   }
 }
+
+export async function inviteMember(data: FormData) {
+  const schema = z.object({
+    email: z.string().nonempty(),
+    orgName: z.string().nonempty(),
+  });
+
+  try {
+    const validReq = schema.parse({
+      email: data.get("invite"),
+      orgName: data.get("orgId"),
+    });
+
+    const validUser = await prisma.user.findFirst({
+      where: { email: validReq.email },
+    });
+
+    const validOrg = await prisma.org.findFirst({
+      where: { name: validReq.orgName },
+    });
+
+    if (!validUser || !validOrg) return;
+
+    await prisma.user.update({
+      where: { id: validUser?.id },
+      data: { employeeAtId: [validOrg?.id] },
+    });
+    const updatedOrg = await prisma.org.update({
+      where: { name: validReq.orgName },
+      data: {
+        employeesId: [validUser.id],
+      },
+    });
+    revalidatePath("/settings");
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      console.log("Zod Error while validating");
+    }
+
+    if (error instanceof Error) {
+      console.log("Error while setting new Employee!");
+    }
+  }
+}

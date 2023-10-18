@@ -56,7 +56,7 @@ model Org {
   name        String   @unique
   admin       String
   employees   User[]   @relation(fields: [employeesId], references: [id])
-  employeesId String[] @map("employees") @db.ObjectId
+  employeesId String[] @db.ObjectId
   repairs     Repair[]
   tasks       Todo[]
 }
