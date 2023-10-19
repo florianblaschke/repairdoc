@@ -334,16 +334,15 @@ export async function setOrgActive(data: FormData) {
 
 export async function inviteMember(data: FormData) {
   const schema = z.object({
-    email: z.string().nonempty(),
-    orgName: z.string().nonempty(),
+    email: z.string().nonempty({ message: "email not valid" }),
+    orgName: z.string().nonempty({ message: "org not valid" }),
   });
 
   try {
     const validReq = schema.parse({
-      email: data.get("invite"),
-      orgName: data.get("orgId"),
+      email: data.get("email"),
+      orgName: data.get("orgName"),
     });
-
     const validUser = await prisma.user.findFirst({
       where: { email: validReq.email },
     });
@@ -351,17 +350,18 @@ export async function inviteMember(data: FormData) {
     const validOrg = await prisma.org.findFirst({
       where: { name: validReq.orgName },
     });
-
     if (!validUser || !validOrg) return;
 
     await prisma.user.update({
-      where: { id: validUser?.id },
-      data: { employeeAtId: [validOrg?.id] },
+      where: { id: validUser.id },
+      data: { employeeAtId: { push: validOrg.id } },
     });
     const updatedOrg = await prisma.org.update({
       where: { name: validReq.orgName },
       data: {
-        employeesId: [validUser.id],
+        employeesId: {
+          push: validUser.id,
+        },
       },
     });
     revalidatePath("/settings");

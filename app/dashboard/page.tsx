@@ -39,7 +39,7 @@ export default async function Home() {
     (repair) => repair.status !== "complete"
   );
 
-  if (!user || !orgData || !notCompleted) return notFound();
+  if (!user || !user.orgActive || !notCompleted) return notFound();
 
   return (
     <main className="max-h-screen ml-20">

@@ -28,9 +28,16 @@ export default function Members({
           >
             <label className="mb-5 w-full join-item" htmlFor="ticket">
               <input
+                hidden
+                readOnly
+                name="orgName"
+                id="orgName"
+                value={orgName!}
+              />
+              <input
                 className="w-full rounded border border-gray-300 bg-inherit p-3 shadow shadow-gray-100 mt-2 appearance-none outline-none text-neutral-800"
-                type="text"
-                name="model"
+                type="email"
+                name="email"
                 placeholder="example@web.de"
                 required
               />
