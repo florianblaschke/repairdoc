@@ -24,6 +24,9 @@ export async function createRepair(data: FormData) {
   const schema = z.object({
     ticket: z.coerce.number(),
     order: z.coerce.number(),
+    type: z.string(),
+    model: z.string(),
+    serial: z.string(),
     firstName: z.string().nonempty(),
     lastName: z.string().nonempty(),
     email: z.string().email().nonempty(),
@@ -40,6 +43,9 @@ export async function createRepair(data: FormData) {
     const parseRepair = schema.parse({
       ticket: data.get("ticket"),
       order: data.get("order"),
+      type: data.get("type"),
+      model: data.get("model"),
+      serial: data.get("serial"),
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
       email: data.get("email"),
@@ -57,6 +63,9 @@ export async function createRepair(data: FormData) {
       data: {
         ticket: parseRepair.ticket,
         order: parseRepair.order,
+        type: parseRepair.type,
+        model: parseRepair.model,
+        serial: parseRepair.serial,
         firstName: parseRepair.firstName,
         lastName: parseRepair.lastName,
         email: parseRepair.email,
@@ -319,6 +328,50 @@ export async function setOrgActive(data: FormData) {
 
     if (error instanceof Error) {
       console.log("Error while setting status");
+    }
+  }
+}
+
+export async function inviteMember(data: FormData) {
+  const schema = z.object({
+    email: z.string().nonempty({ message: "email not valid" }),
+    orgName: z.string().nonempty({ message: "org not valid" }),
+  });
+
+  try {
+    const validReq = schema.parse({
+      email: data.get("email"),
+      orgName: data.get("orgName"),
+    });
+    const validUser = await prisma.user.findFirst({
+      where: { email: validReq.email },
+    });
+
+    const validOrg = await prisma.org.findFirst({
+      where: { name: validReq.orgName },
+    });
+    if (!validUser || !validOrg) return;
+
+    await prisma.user.update({
+      where: { id: validUser.id },
+      data: { employeeAtId: { push: validOrg.id } },
+    });
+    const updatedOrg = await prisma.org.update({
+      where: { name: validReq.orgName },
+      data: {
+        employeesId: {
+          push: validUser.id,
+        },
+      },
+    });
+    revalidatePath("/settings");
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      console.log("Zod Error while validating");
+    }
+
+    if (error instanceof Error) {
+      console.log("Error while setting new Employee!");
     }
   }
 }

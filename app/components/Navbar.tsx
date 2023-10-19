@@ -11,8 +11,14 @@ export default async function Navbar() {
     where: { email: session?.user?.email },
   });
 
-  const admin = await prisma.org.findMany({ where: { admin: user?.email! } });
-
+  const allOrgForUser = await prisma.org.findMany({
+    where: {
+      OR: [
+        { admin: user?.email! },
+        { AND: { employeesId: { has: user?.id! } } },
+      ],
+    },
+  });
   return (
     <div className="navbar z-40 flex flex-col items-center justify-evenly h-full fixed top-0 left-0 bg-yellow-300 w-20 min-w-min shadow-xl">
       {user?.orgActive && (
@@ -25,7 +31,7 @@ export default async function Navbar() {
             tabIndex={0}
             className="dropdown-content z-[40] menu p-2 shadow bg-base-100 rounded-box w-64"
           >
-            {admin.map((entry) => (
+            {allOrgForUser.map((entry) => (
               <li key={entry.id}>
                 <form
                   action={setOrgActive}

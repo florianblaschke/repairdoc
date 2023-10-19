@@ -31,15 +31,15 @@ export default async function Home() {
   const user = await prisma.user.findFirst({
     where: { email: session?.user?.email },
   });
-  const orgData = await prisma.org.findUnique({
-    where: { name: user?.orgActive! },
+  const orgData = await prisma.org.findFirst({
+    where: { admin: user?.email! },
     include: { employees: true, repairs: true, tasks: true },
   });
   const notCompleted = orgData?.repairs.filter(
     (repair) => repair.status !== "complete"
   );
 
-  if (!user || !orgData || !notCompleted) return notFound();
+  if (!user || !user.orgActive || !notCompleted) return notFound();
 
   return (
     <main className="max-h-screen ml-20">

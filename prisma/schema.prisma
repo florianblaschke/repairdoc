@@ -56,15 +56,18 @@ model Org {
   name        String   @unique
   admin       String
   employees   User[]   @relation(fields: [employeesId], references: [id])
-  employeesId String[] @map("employees") @db.ObjectId
+  employeesId String[] @db.ObjectId
   repairs     Repair[]
   tasks       Todo[]
 }
 
 model Repair {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   ticket      Int
   order       Int
+  serial      String?
+  type        String
+  model       String
   firstName   String
   lastName    String
   email       String

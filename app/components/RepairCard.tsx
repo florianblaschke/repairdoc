@@ -29,7 +29,7 @@ export default function RepairCard({
         <p className="text-sm">{ticket} </p>
         <span className="font-bold">Status:</span>
         <p className="text-sm">{translate[status!]}</p>
-        <div className="card-actions justify-end mt-8">
+        <div className="card-actions justify-end">
           <Link href={`/repairs/${id}`} className="btn btn-primary">
             Details
           </Link>

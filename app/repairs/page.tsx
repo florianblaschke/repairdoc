@@ -14,7 +14,7 @@ export default async function Repairs() {
 
   return (
     <>
-      <main className="flex min-h-screen flex-col items-center justify-start pl-24 bg-slate-50">
+      <main className="flex min-h-screen flex-col items-center justify-start pl-24">
         <RepairTable data={data?.repairs!} />
       </main>
     </>

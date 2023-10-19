@@ -6,3 +6,8 @@ export const translate: Record<string, string> = {
   revalidate: "Kunden kontaktieren",
   complete: "Abgeschlossen",
 };
+
+export const translateType: Record<string, string> = {
+  machine: "Maschine",
+  grinder: "Mühle",
+};
