@@ -9,6 +9,7 @@ export default function StatBar({
 }) {
   const completed = data.filter((repair) => repair.status === "complete");
   const notCompleted = data.filter((repair) => repair.status !== "complete");
+
   return (
     <div className="stats shadow">
       <div className="stat">
@@ -45,12 +46,14 @@ export default function StatBar({
 
       <div className="stat">
         <div className="stat-value">
-          {Math.floor(
-            (1 -
-              (notCompleted.length + todo.length) /
-                (data.length + todo.length)) *
-              100
-          )}
+          {data.length + todo.length === 0
+            ? 0
+            : Math.floor(
+                (1 -
+                  (notCompleted.length + todo.length) /
+                    (data.length + todo.length)) *
+                  100
+              )}
           %
         </div>
         <div className="stat-title">der Aufgaben geschafft</div>
