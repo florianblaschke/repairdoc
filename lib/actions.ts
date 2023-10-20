@@ -4,6 +4,7 @@ import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { inherits } from "util";
 import { z } from "zod";
 
 export async function createRepair(data: FormData) {
@@ -373,5 +374,87 @@ export async function inviteMember(data: FormData) {
     if (error instanceof Error) {
       console.log("Error while setting new Employee!");
     }
+  }
+}
+
+export async function deleteOrg(data: FormData) {
+  const schema = z.object({
+    user: z.string().nonempty(),
+    orgName: z.string().nonempty(),
+  });
+
+  try {
+    const validReq = schema.parse({
+      user: data.get("user"),
+      orgName: data.get("orgName"),
+    });
+
+    const orgToDelete = await prisma.org.delete({
+      where: { name: validReq.orgName, admin: validReq.user },
+      include: { employees: true },
+    });
+
+    orgToDelete.employees.map(async (employee) => {
+      const filtered = employee.employeeAtId.filter(
+        (id) => id !== orgToDelete.id
+      );
+      await prisma.user.update({
+        where: { id: employee.id },
+        data: { employeeAtId: [...filtered] },
+      });
+    });
+
+    revalidatePath("/settings");
+  } catch (error) {
+    if (error instanceof Error)
+      return console.log("Error during database call");
+    if (error instanceof z.ZodError)
+      return console.log("Error during validation");
+  }
+}
+
+export async function kickUser(data: FormData) {
+  const schema = z.object({
+    userId: z.string().nonempty(),
+    orgName: z.string().nonempty(),
+  });
+  try {
+    const validReq = schema.parse({
+      userId: data.get("userId"),
+      orgName: data.get("orgName"),
+    });
+
+    const orgWhereKicked = await prisma.org.findUnique({
+      where: { name: validReq.orgName },
+      include: { employees: true },
+    });
+
+    if (!orgWhereKicked) return;
+
+    const filteredOrg = orgWhereKicked.employeesId.filter(
+      (id) => id !== validReq.userId
+    );
+    const userToKick = orgWhereKicked.employees.find(
+      (employee) => employee.id === validReq.userId
+    );
+    const filteredUser = userToKick?.employeeAtId.filter(
+      (id) => id !== orgWhereKicked.id
+    );
+
+    await prisma.org.update({
+      where: { id: orgWhereKicked.id },
+      data: { employeesId: [...filteredOrg!] },
+    });
+
+    await prisma.user.update({
+      where: { id: validReq.userId },
+      data: { employeeAtId: [...filteredUser!] },
+    });
+
+    revalidatePath("/settings");
+  } catch (error) {
+    if (error instanceof Error) return console.log("Error with Database");
+    if (error instanceof z.ZodError)
+      return console.log("Error while validating");
   }
 }

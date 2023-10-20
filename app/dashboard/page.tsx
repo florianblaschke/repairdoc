@@ -31,13 +31,26 @@ export default async function Home() {
   const user = await prisma.user.findFirst({
     where: { email: session?.user?.email },
   });
-  const orgData = await prisma.org.findFirst({
+  /* const orgData = await prisma.org.findFirst({
     where: { admin: user?.email! },
     include: { employees: true, repairs: true, tasks: true },
+  }); */
+
+  const orgData = await prisma.org.findMany({
+    where: {
+      OR: [
+        { admin: user?.email! },
+        { AND: { employeesId: { has: user?.id! } } },
+      ],
+    },
+    include: { employees: true, tasks: true, repairs: true },
   });
-  const notCompleted = orgData?.repairs.filter(
-    (repair) => repair.status !== "complete"
-  );
+
+  const activeOrg = orgData?.find((org) => org.name === user?.orgActive);
+
+  const notCompleted = orgData
+    ?.find((org) => org.name === user?.orgActive)
+    ?.repairs.filter((repair) => repair.status !== "complete");
 
   if (!user || !user.orgActive || !notCompleted) return notFound();
 
@@ -61,10 +74,10 @@ export default async function Home() {
           </ul>
         </div>
         <div className="flex flex-col items-center justify-center min-w-fit">
-          <StatBar data={orgData?.repairs!} todo={orgData?.tasks!} />
+          <StatBar data={activeOrg?.repairs!} todo={activeOrg?.tasks!} />
           <div className="divider mt-20">To-Do-Liste</div>
         </div>
-        <Todo todo={orgData?.tasks!} />
+        <Todo todo={activeOrg?.tasks!} />
       </div>
     </main>
   );
