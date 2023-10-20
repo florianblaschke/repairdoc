@@ -1,9 +1,8 @@
 "use client";
 
-import { createToDo } from "@/lib/actions";
+import { createToDo, deleteToDo } from "@/lib/actions";
 import { useRef } from "react";
 import { Tasks } from "../dashboard/page";
-import { deleteToDo } from "@/lib/actions";
 
 export default function Todo({ todo }: { todo: Tasks[] }) {
   const form = useRef<HTMLFormElement>(null);

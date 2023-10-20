@@ -1,6 +1,7 @@
 import { setOrgActive } from "@/lib/actions";
 import { Org, User } from "@prisma/client";
 import Members from "./Members";
+import DeleteOrg from "./DeleteOrg";
 
 type orgsWithUsers = {
   id: string;
@@ -52,6 +53,7 @@ export default function OrgList({
               </button>
             </form>
             <Members members={entry.employees} orgName={entry.name} />
+            <DeleteOrg user={user?.email!} orgName={entry.name} />
           </div>
         </li>
       ))}

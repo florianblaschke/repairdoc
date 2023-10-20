@@ -1,6 +1,6 @@
 "use client";
 
-import { inviteMember } from "@/lib/actions";
+import { inviteMember, kickUser } from "@/lib/actions";
 import { User } from "@prisma/client";
 
 export default function Members({
@@ -51,13 +51,16 @@ export default function Members({
             {members.map((entry) => (
               <li key={entry.id} className="border rounded-md p-1 m-1 w-full">
                 <div className="flex justify-between items-center gap-2">
-                  <form className="flex justify-between items-center gap-2 w-full">
+                  <form
+                    action={kickUser}
+                    className="flex justify-between items-center gap-2 w-full"
+                  >
                     <span className="text-sm font-medium flex-1">
                       {entry.name}
                     </span>
-                    <button className="btn btn-circle" name="orgName">
-                      X
-                    </button>
+                    <input hidden readOnly name="userId" value={entry.id} />
+                    <input hidden readOnly name="orgName" value={orgName!} />
+                    <button className="btn btn-circle">X</button>
                   </form>
                 </div>
               </li>
