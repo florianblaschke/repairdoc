@@ -293,6 +293,13 @@ export async function createOrg(data: FormData) {
       },
     });
 
+    await prisma.user.update({
+      where: { email: session?.user.email! },
+      data: {
+        orgActive: newOrg.name,
+      },
+    });
+
     revalidatePath("/settings");
   } catch (error) {
     if (error instanceof z.ZodError)
