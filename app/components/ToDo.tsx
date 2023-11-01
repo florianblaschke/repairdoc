@@ -1,15 +1,15 @@
 "use client";
 
 import { createToDo, deleteToDo } from "@/lib/actions";
+import { Todo } from "@prisma/client";
 import { useRef } from "react";
-import { Tasks } from "../dashboard/page";
 
-export default function Todo({ todo }: { todo: Tasks[] }) {
-  const form = useRef<HTMLFormElement>(null);
+export default function Todo({ todo }: { todo: Todo[] }) {
+  const formRef = useRef<HTMLFormElement>(null);
   return (
     <div className="min-w-fit h-full">
       <div className="mt-10 flex justify-center">
-        <form ref={form} className="-mt-10 group" action={createToDo}>
+        <form ref={formRef} className="-mt-10 group" action={createToDo}>
           <div className="join">
             <input
               className="input input-bordered join-item group"
@@ -19,7 +19,7 @@ export default function Todo({ todo }: { todo: Tasks[] }) {
               required
             />
             <button
-              onClick={form.current?.reset()!}
+              onClick={formRef.current?.reset()!}
               className="btn btn-secondary join-item group-invalid:pointer-events-none group-invalid:opacity-50"
               type="submit"
             >
@@ -30,7 +30,7 @@ export default function Todo({ todo }: { todo: Tasks[] }) {
       </div>
       <div className="h-96 mt-20 overflow-y-auto">
         <ul>
-          {todo.map((task: Tasks) => (
+          {todo.map((task: Todo) => (
             <li
               key={task.id}
               className="flex flex-row rounded p-2 relative justify-between items-center w-full my-4 shadow-sm"
