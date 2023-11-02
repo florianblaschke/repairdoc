@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import rocket from "@/public/rocket.png";
-import { RepairInfo } from "../dashboard/page";
 import Link from "next/link";
 import { translate } from "@/lib/helpers";
+import { Repair } from "@prisma/client";
 
-type PartialInfo = Partial<RepairInfo>;
+type PartialInfo = Partial<Repair>;
 
 export default function RepairCard({
   ticket,
