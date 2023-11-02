@@ -4,7 +4,10 @@ export default function CreateOrgForm() {
   return (
     <form action={createOrg} className="group p-10">
       <div className="join">
-        <label htmlFor="name" className="join-item label label-text border">
+        <label
+          htmlFor="name"
+          className="join-item label label-text border font-medium p-3"
+        >
           Name
         </label>
         <input
@@ -13,7 +16,7 @@ export default function CreateOrgForm() {
           id="name"
           className="input join-item input-bordered"
           required
-          placeholder="dreamteam"
+          placeholder="Neues Team"
         />
         <button
           className="group btn btn-secondary join-item group-invalid:pointer-events-none group-invalid:opacity-50"

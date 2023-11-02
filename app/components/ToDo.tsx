@@ -1,10 +1,10 @@
 "use client";
 
 import { createToDo, deleteToDo } from "@/lib/actions";
+import { Todo } from "@prisma/client";
 import { useRef } from "react";
-import { Tasks } from "../dashboard/page";
 
-export default function Todo({ todo }: { todo: Tasks[] }) {
+export default function Todo({ todo }: { todo: Todo[] }) {
   const form = useRef<HTMLFormElement>(null);
   return (
     <div className="min-w-fit h-full">
@@ -30,7 +30,7 @@ export default function Todo({ todo }: { todo: Tasks[] }) {
       </div>
       <div className="h-96 mt-20 overflow-y-auto">
         <ul>
-          {todo.map((task: Tasks) => (
+          {todo.map((task: Todo) => (
             <li
               key={task.id}
               className="flex flex-row rounded p-2 relative justify-between items-center w-full my-4 shadow-sm"

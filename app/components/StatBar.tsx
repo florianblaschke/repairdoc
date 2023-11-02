@@ -1,11 +1,11 @@
-import { RepairInfo, Tasks } from "../dashboard/page";
+import { Repair, Todo } from "@prisma/client";
 
 export default function StatBar({
   data,
   todo,
 }: {
-  data: RepairInfo[];
-  todo: Tasks[];
+  data: Repair[];
+  todo: Todo[];
 }) {
   const completed = data.filter((repair) => repair.status === "complete");
   const notCompleted = data.filter((repair) => repair.status !== "complete");

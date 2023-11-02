@@ -1,40 +1,15 @@
-import RepairCard from "../components/RepairCard";
 import prisma from "@/prisma/client";
+import { notFound } from "next/navigation";
+import { getAuthSession } from "../api/auth/[...nextauth]/route";
+import RepairCard from "../components/RepairCard";
 import StatBar from "../components/StatBar";
 import Todo from "../components/ToDo";
-import { getAuthSession } from "../api/auth/[...nextauth]/route";
-import { notFound } from "next/navigation";
-
-export interface RepairInfo {
-  id: string;
-  ticket: number;
-  order: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: number;
-  description: string;
-  createdAt: Date;
-  updatedAt: Date;
-  status: string;
-}
-
-export interface Tasks {
-  id: string;
-  createdBy?: string | null;
-  task: string;
-  createdAt: Date;
-}
 
 export default async function Home() {
   const session = await getAuthSession();
   const user = await prisma.user.findFirst({
     where: { email: session?.user?.email },
   });
-  /* const orgData = await prisma.org.findFirst({
-    where: { admin: user?.email! },
-    include: { employees: true, repairs: true, tasks: true },
-  }); */
 
   const orgData = await prisma.org.findMany({
     where: {
