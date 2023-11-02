@@ -18,8 +18,8 @@ export default async function Settings() {
 
   return (
     <main className="ml-24 min-h-screen">
-      <div className="flex flex-row flex-wrap min-w-full min-h-screen gap-0">
-        <section className="flex flex-col h-screen w-1/2 items-center">
+      <div className="flex flex-col md:flex-row flex-wrap min-w-full min-h-screen gap-0">
+        <section className="flex flex-col h-screen w-1/2 items-center shrink-0">
           <h2 className="text-lg font-bold mt-5">Erstelle ein neues Team</h2>
           <CreateOrgForm />
           <div className="divider m-0 font-medium">Teams</div>
