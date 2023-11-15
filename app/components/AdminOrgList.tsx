@@ -14,7 +14,9 @@ export default function OrgList({
   adminAtOrgs,
   user,
   text,
+  allUsers,
 }: {
+  allUsers: Pick<User, "email">[];
   adminAtOrgs: orgsWithUsers[];
   user:
     | ({
@@ -52,7 +54,11 @@ export default function OrgList({
                 {user?.orgActive === entry.name ? "Aktiv" : "Wechseln"}
               </button>
             </form>
-            <Members members={entry.employees} orgName={entry.name} />
+            <Members
+              members={entry.employees}
+              orgName={entry.name}
+              allUsers={allUsers}
+            />
             <DeleteOrg user={user?.email!} orgName={entry.name} />
           </div>
         </li>

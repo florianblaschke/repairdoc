@@ -4,7 +4,6 @@ import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { inherits } from "util";
 import { z } from "zod";
 
 export async function createRepair(data: FormData) {
@@ -105,11 +104,12 @@ export async function deleteRepair(data: FormData) {
     const validId = schema.parse({
       id: data.get("id"),
     });
-    await prisma.repair.delete({
-      where: {
-        id: validId.id,
-      },
+
+    const comments = prisma.comment.deleteMany({
+      where: { repairId: validId.id },
     });
+    const repairs = prisma.repair.delete({ where: { id: validId.id } });
+    await prisma.$transaction([comments, repairs]);
     revalidatePath("/dashboard");
     revalidatePath("/repairs");
   } catch (error) {
@@ -351,6 +351,7 @@ export async function inviteMember(data: FormData) {
       email: data.get("email"),
       orgName: data.get("orgName"),
     });
+
     const validUser = await prisma.user.findFirst({
       where: { email: validReq.email },
     });
@@ -358,7 +359,11 @@ export async function inviteMember(data: FormData) {
     const validOrg = await prisma.org.findFirst({
       where: { name: validReq.orgName },
     });
-    if (!validUser || !validOrg) return;
+
+    const userAlreadyInOrg = validOrg?.employeesId.some(
+      (entry) => entry === validUser!.id
+    );
+    if (!validUser || !validOrg || userAlreadyInOrg) return;
 
     await prisma.user.update({
       where: { id: validUser.id },

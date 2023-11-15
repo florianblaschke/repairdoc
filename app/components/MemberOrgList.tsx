@@ -12,19 +12,17 @@ export default function OrgList({
     | null;
   text: string;
 }) {
-  if (user?.employeeAtId.length === 0 && user.orgActive === null)
-    return (
-      <>
-        <br />
-        <span className="text-sm font-medium">
-          Du bist kein Mitglied in einem anderen Team
-        </span>
-      </>
-    );
-
   return (
     <ul className="p-8">
       <span className="text-lg font-bold">{text}</span>
+      {user?.employeeAtId.length === 0 && (
+        <>
+          <br />
+          <span className="text-sm font-medium">
+            Du bist kein Mitglied in einem anderen Team
+          </span>
+        </>
+      )}
       {user?.employeeAt.map((entry) => (
         <li className="border rounded-md p-1 m-1 w-full" key={entry.id}>
           <div className="flex justify-between items-center gap-2">

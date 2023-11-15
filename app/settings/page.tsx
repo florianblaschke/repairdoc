@@ -3,6 +3,7 @@ import { getAuthSession } from "../api/auth/[...nextauth]/route";
 import AdminOrgList from "../components/AdminOrgList";
 import CreateOrgForm from "../components/CreateOrgForm";
 import MemberOrgList from "../components/MemberOrgList";
+import { User } from "@prisma/client";
 
 export default async function Settings() {
   const session = await getAuthSession();
@@ -16,6 +17,10 @@ export default async function Settings() {
     include: { employeeAt: true },
   });
 
+  const allUsers: Pick<User, "email">[] = await prisma.user.findMany({
+    select: { email: true },
+  });
+
   return (
     <main className="ml-24 min-h-screen">
       <div className="flex flex-col md:flex-row flex-wrap min-w-full min-h-screen gap-0">
@@ -25,6 +30,7 @@ export default async function Settings() {
           <div className="divider m-0 font-medium">Teams</div>
           <div className="w-full">
             <AdminOrgList
+              allUsers={allUsers}
               user={user}
               adminAtOrgs={adminAtOrgs}
               text={"Hier bin ich Admin"}

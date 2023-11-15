@@ -8,8 +8,8 @@ const config: Config = {
   ],
   plugins: [require("daisyui")],
   daisyui: {
-    themes: false,
-    darkTherme: "light",
+    themes: ["light"],
+    darkTheme: ["night"],
   },
 };
 export default config;
