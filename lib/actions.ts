@@ -4,7 +4,6 @@ import { getAuthSession } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { inherits } from "util";
 import { z } from "zod";
 
 export async function createRepair(data: FormData) {
@@ -105,11 +104,12 @@ export async function deleteRepair(data: FormData) {
     const validId = schema.parse({
       id: data.get("id"),
     });
-    await prisma.repair.delete({
-      where: {
-        id: validId.id,
-      },
+
+    const comments = prisma.comment.deleteMany({
+      where: { repairId: validId.id },
     });
+    const repairs = prisma.repair.delete({ where: { id: validId.id } });
+    await prisma.$transaction([comments, repairs]);
     revalidatePath("/dashboard");
     revalidatePath("/repairs");
   } catch (error) {
