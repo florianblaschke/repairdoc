@@ -351,6 +351,7 @@ export async function inviteMember(data: FormData) {
       email: data.get("email"),
       orgName: data.get("orgName"),
     });
+
     const validUser = await prisma.user.findFirst({
       where: { email: validReq.email },
     });
@@ -358,7 +359,11 @@ export async function inviteMember(data: FormData) {
     const validOrg = await prisma.org.findFirst({
       where: { name: validReq.orgName },
     });
-    if (!validUser || !validOrg) return;
+
+    const userAlreadyInOrg = validOrg?.employeesId.some(
+      (entry) => entry === validUser!.id
+    );
+    if (!validUser || !validOrg || userAlreadyInOrg) return;
 
     await prisma.user.update({
       where: { id: validUser.id },
