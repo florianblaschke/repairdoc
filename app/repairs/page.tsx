@@ -1,6 +1,7 @@
 import prisma from "@/prisma/client";
 import RepairTable from "../components/RepairTable";
 import { getAuthSession } from "../api/auth/[...nextauth]/route";
+import { notFound } from "next/navigation";
 
 export default async function Repairs() {
   const session = await getAuthSession();
@@ -12,6 +13,7 @@ export default async function Repairs() {
     select: { repairs: true },
   });
 
+  if (!data) return notFound();
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-start pl-24">
