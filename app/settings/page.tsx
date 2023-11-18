@@ -42,7 +42,7 @@ export default async function Settings() {
         </section>
         <div className="divider divider-horizontal"></div>
         <section className="flex flex-col">
-          <h2 className="font-bold text-lg p-8">Einstellungen</h2>
+          <h2 className="font-bold text-lg p-8">...in Arbeit</h2>
         </section>
       </div>
     </main>
